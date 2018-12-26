@@ -1,8 +1,10 @@
 # message_verifier.cr
 
-Ruby on Rails compatible `ActiveSupport::MessageVerifier` implementation for Crystal. Allows verified message passing back and forth between ruby and crystal-lang implementations. It's really
+[![Build Status](https://travis-ci.org/danielwestendorf/message_verifier.cr.svg?branch=master)](https://travis-ci.org/danielwestendorf/message_verifier.cr)
 
-*Why?* Perhaps you have a microservice written in Crystal and it needs to communicate with a ruby/rails app (or vice-versa), and the data passed between those services needs to be verified to be trustworthy.
+Ruby on Rails compatible `ActiveSupport::MessageVerifier` implementation for Crystal. Allows verified message passing back and forth between ruby and crystal-lang implementations.
+
+*Why?* Perhaps you have a microservice written in Crystal and it needs to communicate with a ruby/rails app (or vice-versa), and the data passed between those services needs to be verified to be trustworthy?
 
 ## Installation
 
