@@ -61,7 +61,7 @@ describe MessageVerifier::Verifier do
 
       digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
 
-      MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}", "other").should be_nil
+      MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}", purpose: "other").should be_nil
     end
 
     it "returns message when the purpose matches" do
@@ -81,6 +81,28 @@ describe MessageVerifier::Verifier do
 
       MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}").should eq("superdupersecret")
     end
+
+    describe "loads the message with the serializer" do
+      it "YAML" do
+        secret = "supersecret123456"
+        msg = { "foo" => "bar" }
+        data = Base64.strict_encode(msg.to_yaml)
+
+        digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+
+        MessageVerifier::Verifier.new(secret, serializer: :YAML).verified("#{data}--#{digest}").should be_a(YAML::Any)
+      end
+
+      it "JSON" do
+        secret = "supersecret123456"
+        msg = { "foo" => "bar" }
+        data = Base64.strict_encode(msg.to_json)
+
+        digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+
+        MessageVerifier::Verifier.new(secret, serializer: :JSON).verified("#{data}--#{digest}").should be_a(JSON::Any)
+      end
+    end
   end
 
   describe "#verify" do
@@ -88,9 +110,9 @@ describe MessageVerifier::Verifier do
       secret = "supersecret123456"
       data = Base64.strict_encode("superdupersecret")
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(:sha256, secret, data)
 
-      MessageVerifier::Verifier.new(secret).verify("#{data}--#{digest}").should eq("superdupersecret")
+      MessageVerifier::Verifier.new(secret, digest: :sha256).verify("#{data}--#{digest}").should eq("superdupersecret")
     end
 
     it "raises an error with an invalid message" do
