@@ -1,4 +1,5 @@
 require "openssl/hmac"
+require "json"
 
 module MessageVerifier
   class Verifier
@@ -38,7 +39,7 @@ module MessageVerifier
     #
     #   invalid_message = "f--46a0120593880c733a53b6dad75b42ddc1c8996d"
     #   verifier.verified(invalid_message) # => nil
-    def verified(signed_message, purpose = nil)
+    def verified(signed_message, purpose : String | Symbol | ::Nil = nil)
       if valid_message?(signed_message)
         data = signed_message.split("--").first
         metadata = MessageVerifier::Metadata.verify(decode(data), purpose)
@@ -62,8 +63,8 @@ module MessageVerifier
     #
     #   other_verifier = MessageVerifier::Verifier.new 'd1ff3r3nt-s3Krit'
     #   other_verifier.verify(signed_message) # => ActiveSupport::MessageVerifier::InvalidSignature
-    def verify(*args)
-      verified(*args) || raise(InvalidSignature.new)
+     def verify(signed_message : String, purpose : String | Symbol | ::Nil = nil)
+      verified(signed_message, purpose: purpose) || raise(InvalidSignature.new)
     end
 
     # Generates a signed message for the provided value.
@@ -86,7 +87,7 @@ module MessageVerifier
       ::Base64.decode_string(string)
     end
 
-    def generate_digest(data)
+    private def generate_digest(data)
       OpenSSL::HMAC.hexdigest(@digest, @secret, data)
     end
   end
