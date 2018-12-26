@@ -1,4 +1,4 @@
-name: message_verifier.cr
+name: message_verifier
 version: 0.1.0
 
 authors:
