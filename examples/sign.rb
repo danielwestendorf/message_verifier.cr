@@ -1,6 +1,7 @@
 require "active_support"
-require "json"
+require "yaml"
 
-verifier = ActiveSupport::MessageVerifier.new("s3Krit", digest: "SHA256", serializer: JSON)
+verifier = ActiveSupport::MessageVerifier.new("s3Krit", digest: "SHA256", serializer: YAML)
 
-puts verifier.generate(gets.chomp, purpose: :example, expires_at: DateTime.now + 84_600)
+payload = { message: gets.strip }
+puts verifier.generate(payload, purpose: :example, expires_at: DateTime.now + 84_600)

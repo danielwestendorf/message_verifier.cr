@@ -27,18 +27,18 @@ require "message_verifier"
 ```crystal
 verifier = MessageVerifier::Verifier.new("s3Krit", digest: :sha256)
 
-msg = "eyJfcmFpbHMiOnsibWVzc2FnZSI6IklrNWxkbVZ5SUdkdmJtNWhJR2RwZG1VZ2VXOTFJSFZ3TENCdVpYWmxjaUJuYjI1dVlTQnNaWFFnZVc5MUlHUnZkMjRpIiwiZXhwIjpudWxsLCJwdXIiOiJleGFtcGxlIn19--60475ee3cec26744d26579089b060bf5494553d0ac139f6f2b71f2447455ab48"
+msg = "eyJfcmFpbHMiOnsibWVzc2FnZSI6IklrNWxkbVZ5SUdkdmJtNWhJR2RwZG1VZ2VXOTFJSFZ3TENCdVpYWmxjaUJuYjI1dVlTQnNaWFFnZVc5MUlHUnZkMjRpIiwiZXhwIjoiMjI1MC0wOC0xMlQyMzo0OToyMC45NzJaIiwicHVyIjoiZXhhbXBsZSJ9fQ==--aa1fe689bae0a5296c99232f59e96ab0f37c77823a4a9c7378e94ff58bed45a9"
 
 puts "Verified message: #{verifier.verify(msg, purpose: :example)}"
 ```
 
 ### Generate a message
 ```crystal
-verifier = MessageVerifier::Verifier.new("s3Krit", digest: :sha256, serializer: :JSON)
+verifier = MessageVerifier::Verifier.new("s3Krit", digest: :sha256)
 
 msg = { "foo" => "bar" }
 
-puts verifier.generate(msg.to_json, purpose: :example, expires_at: Time.now  + 1.week)
+puts verifier.generate(msg.to_json, purpose: :example, expires_at: Time.now  + 1.week, parser: :JSON)
 
 ```
 

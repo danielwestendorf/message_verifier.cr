@@ -1,9 +1,10 @@
 require "../src/message_verifier"
 
-verifier = MessageVerifier::Verifier.new("s3Krit", digest: :sha256, serializer: :JSON)
+verifier = MessageVerifier::Verifier.new("s3Krit", digest: :sha256)
 
 msg = STDIN.gets
 
 if msg
-  puts verifier.generate(msg.strip, purpose: :example, expires_at: Time.now  + 1.week)
+  payload = { "message" => msg.strip }
+  puts verifier.generate(payload.to_yaml, purpose: :example, expires_at: Time.now  + 1.week)
 end

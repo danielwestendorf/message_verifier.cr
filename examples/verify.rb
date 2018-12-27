@@ -1,7 +1,7 @@
 require "active_support"
-require "json"
+require "yaml"
 
-verifier = ActiveSupport::MessageVerifier.new("s3Krit", digest: "SHA256", serializer: JSON)
+verifier = ActiveSupport::MessageVerifier.new("s3Krit", digest: "SHA256", serializer: YAML)
 
 msg = STDIN.read.strip
 
