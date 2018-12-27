@@ -23,13 +23,12 @@ require "message_verifier"
 ```
 
 ### Verify a message
-
 ```crystal
 verifier = MessageVerifier::Verifier.new("s3Krit", digest: :sha256)
 
-msg = "eyJfcmFpbHMiOnsibWVzc2FnZSI6IklrNWxkbVZ5SUdkdmJtNWhJR2RwZG1VZ2VXOTFJSFZ3TENCdVpYWmxjaUJuYjI1dVlTQnNaWFFnZVc5MUlHUnZkMjRpIiwiZXhwIjoiMjI1MC0wOC0xMlQyMzo0OToyMC45NzJaIiwicHVyIjoiZXhhbXBsZSJ9fQ==--aa1fe689bae0a5296c99232f59e96ab0f37c77823a4a9c7378e94ff58bed45a9"
+msg = "eyJfcmFpbHMiOnsibWVzc2FnZSI6IkxTMHRDbTFsYzNOaFoyVTZJRTVsZG1WeUlHZHZibTVoSUdkcGRtVWdlVzkxSUhWd0xDQnVaWFpsY2lCbmIyNXVZU0JzWlhRZ2VXOTFJR1J2ZDI0SyIsImV4cCI6IjIwMTktMDEtMDNUMDA6MjI6MjMuMTc4MDQ0MDAwWiIsInB1ciI6ImV4YW1wbGUifX0=--efc837c7279a1030109ec7519418c8934a2cb38d2ce2882a826acf422e432f5e"
 
-puts "Verified message: #{verifier.verify(msg, purpose: :example)}"
+puts "Verified message: #{verifier.verify(msg, purpose: :example, parser: :JSON)}"
 ```
 
 ### Generate a message
