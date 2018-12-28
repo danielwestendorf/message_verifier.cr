@@ -18,7 +18,10 @@ module MessageVerifier
     end
 
     def verify(purpose)
-      @message if match?(purpose) && fresh?
+      raise ExpiredMessage.new unless fresh?
+      raise InvalidMessagePurpose.new unless match?(purpose)
+
+      @message
     end
 
     def as_json

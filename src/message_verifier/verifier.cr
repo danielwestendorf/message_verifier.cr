@@ -40,7 +40,19 @@ module MessageVerifier
     #
     #   invalid_message = "f--46a0120593880c733a53b6dad75b42ddc1c8996d"
     #   verifier.verified(invalid_message) # => nil
-    def verified(signed_message, purpose : String | Symbol | ::Nil = nil, parser : ::Nil | Symbol = :JSON )
+    def verified(signed_message, purpose : String | Symbol | ::Nil = nil, parser : ::Nil | Symbol = :JSON)
+      if valid_message?(signed_message)
+        data = signed_message.split("--").first
+        metadata = MessageVerifier::Metadata.verify(decode(data), purpose)
+
+        load(metadata.to_s, parser) if metadata
+      end
+    rescue InvalidSignature
+      nil
+    end
+
+    # Same as #verify, however it raises an exception instead of returning nil
+    def verified!(signed_message, purpose : String | Symbol | ::Nil = nil, parser : ::Nil | Symbol = :JSON)
       if valid_message?(signed_message)
         data = signed_message.split("--").first
         metadata = MessageVerifier::Metadata.verify(decode(data), purpose)
@@ -61,8 +73,8 @@ module MessageVerifier
     #
     #   other_verifier = MessageVerifier::Verifier.new 'd1ff3r3nt-s3Krit'
     #   other_verifier.verify(signed_message) # => ActiveSupport::MessageVerifier::InvalidSignature
-     def verify(signed_message : String, purpose : String | Symbol | ::Nil = nil, parser : ::Nil | Symbol = :JSON )
-      verified(signed_message, purpose: purpose, parser: parser) || raise(InvalidSignature.new)
+    def verify(signed_message : String, purpose : String | Symbol | ::Nil = nil, parser : ::Nil | Symbol = :JSON)
+      verified!(signed_message, purpose: purpose, parser: parser) || raise(InvalidSignature.new)
     end
 
     # Generates a signed message for the provided value.
@@ -90,14 +102,14 @@ module MessageVerifier
     end
 
     private def load(message, parser)
-        case parser
-        when :YAML
-            YAML.parse(message)
-        when :JSON
-            JSON.parse(message)
-        else
-            message
-        end
+      case parser
+      when :YAML
+        YAML.parse(message)
+      when :JSON
+        JSON.parse(message)
+      else
+        message
+      end
     end
   end
 end
