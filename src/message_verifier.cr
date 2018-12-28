@@ -8,4 +8,8 @@ module MessageVerifier
   class InvalidCompare < MessageVerifierError; end
 
   class InvalidMessage < MessageVerifierError; end
+
+  class ExpiredMessage < InvalidSignature; end
+
+  class InvalidMessagePurpose < InvalidSignature; end
 end

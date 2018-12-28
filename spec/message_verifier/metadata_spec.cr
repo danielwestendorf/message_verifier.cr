@@ -31,7 +31,9 @@ describe MessageVerifier::Metadata do
     it "doesnt match the purpose" do
       message = %({ "_rails": { "message": "Qm9vbQ==", "exp": null, "pur": "login" } })
 
-      MessageVerifier::Metadata.verify(message, :other).should be_nil
+      expect_raises(MessageVerifier::InvalidMessagePurpose) do
+        MessageVerifier::Metadata.verify(message, :other)
+      end
     end
 
     it "is fresh" do
@@ -41,9 +43,11 @@ describe MessageVerifier::Metadata do
     end
 
     it "is stale" do
-      message = %({ "_rails": { "message": "Qm9vbQ==", "exp": #{Time.utc_now.at_beginning_of_month.to_json}, "pur": null } })
+      message = %({ "_rails": { "message": "Qm9vbQ==", "exp": #{(Time.utc_now - 100.days).to_json}, "pur": null } })
 
-      MessageVerifier::Metadata.verify(message).should be_nil
+      expect_raises(MessageVerifier::ExpiredMessage) do
+        MessageVerifier::Metadata.verify(message)
+      end
     end
 
     it "handles the message being passed directly instead of json" do
