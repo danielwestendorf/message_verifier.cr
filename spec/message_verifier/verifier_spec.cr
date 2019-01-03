@@ -67,7 +67,7 @@ describe MessageVerifier::Verifier do
 
       digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
 
-      MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}").should eq("superdupersecret")
+      MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}").should eq(%("superdupersecret"))
     end
 
     describe "loads the message with the parser" do
@@ -89,6 +89,16 @@ describe MessageVerifier::Verifier do
         digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
 
         MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}", parser: :JSON).should be_a(JSON::Any)
+      end
+
+      it "Null" do
+        secret = "supersecret123456"
+        msg = "foo"
+        data = Base64.strict_encode(msg)
+
+        digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+
+        MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}", parser: :Null).should be_a(String)
       end
     end
   end

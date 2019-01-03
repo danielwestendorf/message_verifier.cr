@@ -40,7 +40,7 @@ module MessageVerifier
     #
     #   invalid_message = "f--46a0120593880c733a53b6dad75b42ddc1c8996d"
     #   verifier.verified(invalid_message) # => nil
-    def verified(signed_message, purpose : String | Symbol | ::Nil = nil, parser : ::Nil | Symbol = :JSON)
+    def verified(signed_message, purpose : String | Symbol | ::Nil = nil, parser : ::Nil | Symbol = :Null)
       if valid_message?(signed_message)
         data = signed_message.split("--").first
         metadata = MessageVerifier::Metadata.verify(decode(data), purpose)
@@ -103,6 +103,8 @@ module MessageVerifier
 
     private def load(message, parser)
       case parser
+      when :Null
+        message
       when :YAML
         YAML.parse(message)
       when :JSON
