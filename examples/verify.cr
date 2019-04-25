@@ -1,6 +1,6 @@
 require "../src/message_verifier"
 
-verifier = MessageVerifier::Verifier.new("s3Krit", digest: :sha256)
+verifier = MessageVerifier::Verifier.new("s3Krit", digest: OpenSSL::Algorithm::SHA256)
 
 msg = STDIN.gets
 
