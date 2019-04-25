@@ -33,7 +33,7 @@ puts "Verified message: #{verifier.verify(msg, purpose: :example, parser: :JSON)
 
 ### Generate a message
 ```crystal
-verifier = MessageVerifier::Verifier.new("s3Krit", digest: :sha256)
+verifier = MessageVerifier::Verifier.new("s3Krit", digest: OpenSSL::Algorithm::SHA256)
 
 msg = { "foo" => "bar" }
 

@@ -26,7 +26,7 @@ describe MessageVerifier::Verifier do
       secret = "supersecret123456"
       data = Base64.strict_encode("superdupersecret")
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
       MessageVerifier::Verifier.new(secret).valid_message?("#{data}--#{digest}").should eq(true)
     end
@@ -44,7 +44,7 @@ describe MessageVerifier::Verifier do
         {"_rails" => {"message" => Base64.strict_encode(message.to_json), "exp" => nil, "pur" => "login"}}.to_json
       )
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
       MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}", purpose: "other", parser: :JSON).should be_nil
     end
@@ -56,7 +56,7 @@ describe MessageVerifier::Verifier do
         {"_rails" => {"message" => Base64.strict_encode(message.to_json), "exp" => nil, "pur" => "login"}}.to_json
       )
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
       MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}", "login", parser: :JSON).should eq(message)
     end
@@ -65,7 +65,7 @@ describe MessageVerifier::Verifier do
       secret = "supersecret123456"
       data = Base64.strict_encode(%("superdupersecret"))
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
       MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}").should eq("superdupersecret")
     end
@@ -76,7 +76,7 @@ describe MessageVerifier::Verifier do
         msg = {"foo" => "bar"}
         data = Base64.strict_encode(msg.to_yaml)
 
-        digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+        digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
         MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}", parser: :YAML).should be_a(YAML::Any)
       end
@@ -86,7 +86,7 @@ describe MessageVerifier::Verifier do
         msg = {"foo" => "bar"}
         data = Base64.strict_encode(msg.to_json)
 
-        digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+        digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
         MessageVerifier::Verifier.new(secret).verified("#{data}--#{digest}", parser: :JSON).should be_a(JSON::Any)
       end
@@ -105,7 +105,7 @@ describe MessageVerifier::Verifier do
         {"_rails" => {"message" => Base64.strict_encode(message.to_json), "exp" => nil, "pur" => "login"}}.to_json
       )
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
       expect_raises(MessageVerifier::InvalidMessagePurpose) do
         MessageVerifier::Verifier.new(secret).verified!("#{data}--#{digest}", purpose: "other", parser: :JSON)
@@ -119,7 +119,7 @@ describe MessageVerifier::Verifier do
         {"_rails" => {"message" => Base64.strict_encode(message.to_json), "exp" => (Time.utc_now - 100.days), "pur" => "login"}}.to_json
       )
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
       expect_raises(MessageVerifier::ExpiredMessage) do
         MessageVerifier::Verifier.new(secret).verified!("#{data}--#{digest}", purpose: "other", parser: :JSON)
@@ -133,7 +133,7 @@ describe MessageVerifier::Verifier do
         {"_rails" => {"message" => Base64.strict_encode(message.to_json), "exp" => nil, "pur" => "login"}}.to_json
       )
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
       MessageVerifier::Verifier.new(secret).verified!("#{data}--#{digest}", "login", parser: :JSON).should eq(message)
     end
@@ -161,7 +161,7 @@ describe MessageVerifier::Verifier do
       secret = "supersecret123456"
       data = Base64.strict_encode(%({"_rails":{"message":"Qm9vbQ==","exp":null,"pur":"login"}}))
 
-      digest = OpenSSL::HMAC.hexdigest(:sha1, secret, data)
+      digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)
 
       MessageVerifier::Verifier.new(secret).generate("Boom", purpose: "login").should eq("#{data}--#{digest}")
     end

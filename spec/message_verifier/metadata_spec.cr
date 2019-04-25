@@ -64,7 +64,7 @@ describe MessageVerifier::Metadata do
 
     it "picks expires_at" do
       message = "Boom"
-      time = Time.utc_now.at_end_of_month
+      time = Time.utc.at_end_of_month
       result = %({"_rails":{"message":"Qm9vbQ==","exp":"#{Time::Format::ISO_8601_DATE_TIME.format(time)}","pur":null}})
 
       MessageVerifier::Metadata.wrap(message, expires_at: time).should eq(result)
@@ -72,7 +72,7 @@ describe MessageVerifier::Metadata do
 
     it "picks expires_in" do
       message = "Boom"
-      time = Time.utc_now.add_span(seconds: 60, nanoseconds: 0)
+      time = Time.utc.shift(seconds: 60, nanoseconds: 0)
       result = %({"_rails":{"message":"Qm9vbQ==","exp":"#{Time::Format::ISO_8601_DATE_TIME.format(time).split(".").first})
 
       MessageVerifier::Metadata.wrap(message, expires_in: 60).should start_with(result)
