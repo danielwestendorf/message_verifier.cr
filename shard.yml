@@ -1,9 +1,9 @@
 name: message_verifier
-version: 0.1.2
+version: 0.1.3
 
 authors:
   - Daniel Westendorf <daniel@prowestech.com>
 
-crystal: 0.28.0
+crystal: 0.31.1
 
 license: MIT

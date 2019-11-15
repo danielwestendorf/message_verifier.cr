@@ -37,13 +37,13 @@ describe MessageVerifier::Metadata do
     end
 
     it "is fresh" do
-      message = %({ "_rails": { "message": "Qm9vbQ==", "exp": #{Time.utc_now.at_end_of_month.to_json}, "pur": null } })
+      message = %({ "_rails": { "message": "Qm9vbQ==", "exp": #{Time.utc.at_end_of_month.to_json}, "pur": null } })
 
       MessageVerifier::Metadata.verify(message).should_not be_nil
     end
 
     it "is stale" do
-      message = %({ "_rails": { "message": "Qm9vbQ==", "exp": #{(Time.utc_now - 100.days).to_json}, "pur": null } })
+      message = %({ "_rails": { "message": "Qm9vbQ==", "exp": #{(Time.utc - 100.days).to_json}, "pur": null } })
 
       expect_raises(MessageVerifier::ExpiredMessage) do
         MessageVerifier::Metadata.verify(message)

@@ -116,7 +116,7 @@ describe MessageVerifier::Verifier do
       secret = "supersecret123456"
       message = {"message" => "Boom"}
       data = Base64.strict_encode(
-        {"_rails" => {"message" => Base64.strict_encode(message.to_json), "exp" => (Time.utc_now - 100.days), "pur" => "login"}}.to_json
+        {"_rails" => {"message" => Base64.strict_encode(message.to_json), "exp" => (Time.utc - 100.days), "pur" => "login"}}.to_json
       )
 
       digest = OpenSSL::HMAC.hexdigest(OpenSSL::Algorithm::SHA1, secret, data)

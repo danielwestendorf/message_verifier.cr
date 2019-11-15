@@ -44,7 +44,7 @@ module MessageVerifier
       if expires_at
         Time::Format::ISO_8601_DATE_TIME.format(expires_at.to_utc)
       elsif expires_in
-        Time::Format::ISO_8601_DATE_TIME.format(Time.utc_now.shift(seconds: expires_in, nanoseconds: 0))
+        Time::Format::ISO_8601_DATE_TIME.format(Time.utc.shift(seconds: expires_in, nanoseconds: 0))
       end
     end
 
@@ -75,7 +75,7 @@ module MessageVerifier
     private def fresh?
       return true if @expires_at.nil?
 
-      Time.utc_now < Time.parse_iso8601(@expires_at.not_nil!).to_utc
+      Time.utc < Time.parse_iso8601(@expires_at.not_nil!).to_utc
     end
   end
 end
